@@ -18,13 +18,13 @@ Hämta alla kurser
 ]
 ```
 
-### https://liutentor.lukasabbe.com/api/:courseCode - GET
+### https://liutentor.lukasabbe.com/api/courses/:courseCode - GET
 
 Skaffa data för en specifik kurs. Kommer innehålla resultat
 
 ### Response :
 
-Exempel: https://liutentor.lukasabbe.com/api/TDDE35
+Exempel: https://liutentor.lukasabbe.com/api/courses/TDDE35
 
 ```json
 {
