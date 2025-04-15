@@ -1,4 +1,5 @@
 import express from "express";
+import { rateLimit } from "express-rate-limit";
 import dotenv from "dotenv";
 import cors from "cors";
 import sqlite3 from "sqlite3";
@@ -24,12 +25,22 @@ db.serialize(async() => {
     }
 })
 
+
+const limiter = rateLimit({
+    windowMs: 1000*60,
+    max: 500, // Limit each IP to 1000 requests per windowMs
+    message: "Too many requests, please try again later.",
+    standardHeaders: 'draft-8',
+    legacyHeaders: false
+});
+
 const app = express();
 
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
+app.use(limiter)
 
 app.get("/", (req, res) => {
   res.json({ service : "Online" });
