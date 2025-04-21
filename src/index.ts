@@ -28,7 +28,7 @@ db.serialize(async() => {
 
 const limiter = rateLimit({
     windowMs: 1000*60,
-    max: 500, // Limit each IP to 1000 requests per windowMs
+    max: 500, // Limit each IP to 500 requests per windowMs
     message: "Too many requests, please try again later.",
     standardHeaders: 'draft-8',
     legacyHeaders: false
@@ -78,8 +78,13 @@ app.get("/api/courses/:course_code", (req, res) => {
 
         const row_data = row as any;
         const course_code = row_data.course_code;
-        const miliseconds_in_a_hour = 1000 * 60 * 60;
-        if(row_data.last_updated_timestamp === -1 || parseInt(row_data.last_updated_timestamp) + miliseconds_in_a_hour < Date.now()) await update_course_data(course_code,db);
+        const time_before_course_update = 1000 * 60 * 60 * 24; // 24 hours
+        if(row_data.last_updated_timestamp === -1 || parseInt(row_data.last_updated_timestamp) + time_before_course_update < Date.now()) {
+            if(!await update_course_data(course_code,db)){
+                res.status(503).json({ error: "There is to many unique requests to LIU:s servers right now, so we are rate limited. Try this course later" });
+                return;
+            }
+        }
         const data = await get_course_data(course_code,db);
         if (!data) {
             res.status(404).json({ error: "Course not found" });

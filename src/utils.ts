@@ -76,8 +76,13 @@ export const run = async (d:any, sql_str:string, params:any[]) => {
 
 export const update_course_data = async (course_code: string, db:Database) => {
     console.log("fetching course data for " + course_code);
-    await new Promise(async (resolve) => {
+    return await new Promise(async (resolve) => {
         const data = await get_specific_course_data(course_code)
+
+        if(data === null) {
+            return resolve(false);
+        }
+
         await run(db,`UPDATE course SET last_updated_timestamp = ?, course_name_swe = ?, course_name_eng = ? WHERE course_code = ?`, [Date.now(), data[0].courseTitle.sv, data[0].courseTitle.en, course_code])
         await run(db,`DELETE FROM module WHERE course_code = ?`, [course_code])
 
@@ -100,7 +105,7 @@ export const update_course_data = async (course_code: string, db:Database) => {
             }
         }
 
-        resolve(null);
+        resolve(true);
     })
 }
 
@@ -141,7 +146,7 @@ export const get_specific_course_data = async (course_code: string) => {
         }
     );
     if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
+        return null;
     }
     const raw_buffer = await res.arrayBuffer();
     const raw_text = new TextDecoder("utf-8").decode(raw_buffer);
