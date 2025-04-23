@@ -3,8 +3,6 @@ import { rateLimit } from "express-rate-limit";
 import dotenv from "dotenv";
 import cors from "cors";
 import sqlite3 from "sqlite3";
-//@ts-ignore
-import { expressAnalytics } from "node-api-analytics";
 import { get_all, get_all_coruses, get_course_data, update_course_data } from "./utils.js";
 
 dotenv.config();
@@ -43,7 +41,6 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 app.use(limiter)
-app.use(expressAnalytics(process.env.ANALYTICS_API_KEY));
 
 app.get("/", (req, res) => {
   res.json({ service : "Online" });
