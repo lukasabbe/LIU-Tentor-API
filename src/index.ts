@@ -67,6 +67,11 @@ app.get("/api/courses/:course_code", (req, res) => {
         res.status(400).json({ error: "Course code is required" });
         return;
     }
+    let force = false;
+    if(req.query.force === "true" && req.query.token === process.env.FORCE_UPDATE_TOKEN) {
+        console.log("Force update for course " + req.params.course_code);
+        force = true;
+    }
     db.get(`SELECT * FROM course WHERE course_code = ?`, [req.params.course_code.toUpperCase()], async (err, row) => {
         if (err) {
             console.error(err.message);
@@ -82,7 +87,7 @@ app.get("/api/courses/:course_code", (req, res) => {
         const row_data = row as any;
         const course_code = row_data.course_code;
         const time_before_course_update = 1000 * 60 * 60 * 24; // 24 hours
-        if(row_data.last_updated_timestamp === -1 || parseInt(row_data.last_updated_timestamp) + time_before_course_update < Date.now()) {
+        if(row_data.last_updated_timestamp === -1 || parseInt(row_data.last_updated_timestamp) + time_before_course_update < Date.now() || force) {
             if(!await update_course_data(course_code,db)){
                 res.status(503).json({ error: "There is to many unique requests to LIU:s servers right now, so we are rate limited. Try this course later" });
                 return;
