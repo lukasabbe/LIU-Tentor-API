@@ -7,7 +7,7 @@ Skaffa alla resultat för LIU tentor igenom api:n
 Rate limit is at 500 requests per min.
 But if there is to many unique request it will also stop you becuse all courses won't be cashed on the server.
 
-All courses is cached 24 hours from the point you request the course for the first time. 
+All courses is cached 24 hours from the point you request the course for the first time.
 
 ### https://liutentor.lukasabbe.com/api/courses/ - GET request
 

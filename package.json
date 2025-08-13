@@ -1,27 +1,35 @@
 {
-  "name": "liustatsapi",
-  "version": "1.0.0",
-  "main": "build/index.js",
-  "type": "module",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "MIT",
-  "description": "",
-  "devDependencies": {
-    "@types/express": "^5.0.1",
-    "@types/node-fetch": "^2.6.12",
-    "typescript": "^5.8.3"
-  },
-  "dependencies": {
-    "@types/cors": "^2.8.17",
-    "cors": "^2.8.5",
-    "dotenv": "^16.5.0",
-    "express": "^5.1.0",
-    "express-rate-limit": "^7.5.0",
-    "node-api-analytics": "^1.4.0",
-    "node-fetch": "^2.7.0",
-    "sqlite3": "^5.1.7"
-  }
+    "name": "liustatsapi",
+    "version": "1.0.0",
+    "main": "build/index.js",
+    "type": "module",
+    "scripts": {
+        "build": "tsc",
+        "start": "node build/index.js",
+        "dev": "ts-node src/index.ts",
+        "lint": "eslint . --ext .ts"
+    },
+    "author": "",
+    "license": "MIT",
+    "description": "",
+    "devDependencies": {
+        "@eslint/js": "^9.33.0",
+        "@types/cors": "^2.8.17",
+        "@types/express": "^5.0.1",
+        "@types/node-fetch": "^2.6.12",
+        "eslint": "^9.33.0",
+        "globals": "^16.3.0",
+        "jiti": "^2.5.1",
+        "prettier": "3.6.2",
+        "typescript": "^5.8.3",
+        "typescript-eslint": "^8.39.1"
+    },
+    "dependencies": {
+        "cors": "^2.8.5",
+        "dotenv": "^16.5.0",
+        "express": "^5.1.0",
+        "express-rate-limit": "^7.5.0",
+        "node-fetch": "^2.7.0",
+        "sqlite3": "^5.1.7"
+    }
 }
