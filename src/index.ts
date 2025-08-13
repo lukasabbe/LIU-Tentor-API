@@ -57,7 +57,7 @@ app.get('/api/courses/:course_code', async (req, res) => {
         parseInt(course_data.last_updated_timestamp) + time_before_course_update < Date.now() ||
         force
     ) {
-        if (!(await update_course_data(req.params.course_code))) {
+        if (!(await update_course_data(course_data.course_code))) {
             res.status(503).json({
                 error: 'There is too many unique requests to LIU:s servers right now, so we are rate limited. Try this course later'
             })
