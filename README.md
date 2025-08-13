@@ -1,35 +1,38 @@
-# LIU Tentor API
+# LIU Exams API
 
-Skaffa alla resultat för LIU tentor igenom api:n
+Retrieve results for LiU exams and other assignments.
 
-## Docs
+## Documentation
 
-Rate limit is at 500 requests per min.
-But if there is to many unique request it will also stop you becuse all courses won't be cashed on the server.
+Rate limit: 500 requests per minute.
 
-All courses is cached 24 hours from the point you request the course for the first time.
+If there are too many unique requests, the upstream LiU API rate limit may be hit. This is expected; you should still be able to retrieve the course within about one minute.
 
-### https://liutentor.lukasabbe.com/api/courses/ - GET request
+All courses are cached for 24 hours from the time you first request them. This reduces the number of requests sent to LiU's servers.
 
-Hämta alla kurser
+All responses are JSON.
 
-### Response :
+### GET https://liutentor.lukasabbe.com/api/courses/
+
+Returns a list of all LiU course codes.
+
+### Response:
 
 ```json
 [
-    ...,
-    "tata24",
-    ...
+  "...",
+  "tata24",
+  "..."
 ]
 ```
 
-### https://liutentor.lukasabbe.com/api/courses/:courseCode - GET
+### GET https://liutentor.lukasabbe.com/api/courses/:courseCode
 
-Skaffa data för en specifik kurs. Kommer innehålla resultat
+Returns results for the specified course.
 
-### Response :
+Example: https://liutentor.lukasabbe.com/api/courses/TDDE35
 
-Exempel: https://liutentor.lukasabbe.com/api/courses/TDDE35
+### Response:
 
 ```json
 {
@@ -38,7 +41,7 @@ Exempel: https://liutentor.lukasabbe.com/api/courses/TDDE35
   "courseNameEng": "Large-Scale Distributed Systems and Networks",
   "lastUpdatedTimestamp": "1744731431257.0",
   "modules": [
-    ...,
+    "...",
     {
       "moduleCode": "TEN1",
       "date": "2025-03-24T00:00:00Z",
@@ -65,7 +68,7 @@ Exempel: https://liutentor.lukasabbe.com/api/courses/TDDE35
         }
       ]
     },
-    ...,
+    "..."
   ]
 }
 ```
