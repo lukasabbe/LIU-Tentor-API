@@ -20,6 +20,18 @@ export type Grade = {
     module_id: number
 }
 
+export type EvaliuateReport = {
+    id: number
+    course_code: string
+    report_id: number
+    report_date: string
+    score_1: number
+    score_2: number
+    score_3: number
+    score_4: number
+    score_5: number
+}
+
 export type FormattedCourseData = {
     courseCode: string
     courseNameSwe: string
@@ -33,5 +45,10 @@ export type FormattedCourseData = {
             gradeOrder: number
             quantity: number
         }[]
+    }[]
+    evaluationReports: {
+        reportId: number
+        reportDate: string
+        scores: Record<1 | 2 | 3 | 4 | 5, number>
     }[]
 }

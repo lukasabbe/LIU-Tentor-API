@@ -1,6 +1,6 @@
 import sqlite3 from 'sqlite3'
 import { fetch_all_courses, fetch_course_statistics } from './liuapi.js'
-import { Course, FormattedCourseData, Grade, Module } from './types.js'
+import { Course, EvaliuateReport, FormattedCourseData, Grade, Module } from './types.js'
 
 const db = new sqlite3.Database('database.db')
 
@@ -14,6 +14,21 @@ export const initializeDatabase = () => {
         )
         db.run(
             `CREATE TABLE IF NOT EXISTS grade (id INTEGER PRIMARY KEY AUTOINCREMENT, grade TEXT, grade_order INTEGER, quantity INTEGER, module_id INTEGER, FOREIGN KEY(module_id) REFERENCES module(id))`
+        )
+        db.run(
+            `CREATE TABLE IF NOT EXISTS evaliuate_report (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                course_code TEXT,
+                report_id INTEGER,
+                report_date TEXT,
+                score_1 INTEGER,
+                score_2 INTEGER,
+                score_3 INTEGER,
+                score_4 INTEGER,
+                score_5 INTEGER,
+                UNIQUE(course_code, report_id),
+                FOREIGN KEY(course_code) REFERENCES course(course_code)
+            )`
         )
         const rows = await get_all_cashed()
         const courses = rows as Course[]
@@ -88,12 +103,33 @@ export const get_grade_data = async (module_id: number): Promise<Grade[] | null>
     })
 }
 
+export const get_evaliuate_reports = async (course_code: string): Promise<EvaliuateReport[] | null> => {
+    return new Promise((resolve) => {
+        db.all(
+            `SELECT * FROM evaliuate_report WHERE course_code = ? ORDER BY report_date DESC`,
+            [course_code.toUpperCase()],
+            (err, rows) => {
+                if (err) {
+                    console.error(err.message)
+                    return resolve(null)
+                }
+                if (!rows) {
+                    return resolve(null)
+                }
+                resolve(rows as EvaliuateReport[])
+            }
+        )
+    })
+}
+
 export const get_formated_course_data = async (course_code: string): Promise<FormattedCourseData | null> => {
     const course_data = await get_course_data(course_code)
     if (!course_data) return null
 
     const module_data = await get_module_data(course_code)
     if (!module_data) return null
+
+    const evaliuate_reports = (await get_evaliuate_reports(course_code)) || []
 
     const grade_data = await Promise.all(
         module_data.map(async (module) => {
@@ -115,7 +151,18 @@ export const get_formated_course_data = async (course_code: string): Promise<For
         courseNameSwe: course_data.course_name_swe,
         courseNameEng: course_data.course_name_eng,
         lastUpdatedTimestamp: course_data.last_updated_timestamp,
-        modules: grade_data.filter((module) => module !== null) // Filter out any null modules
+        modules: grade_data.filter((module) => module !== null), // Filter out any null modules
+        evaluationReports: evaliuate_reports.map((report) => ({
+            reportId: report.report_id,
+            reportDate: report.report_date,
+            scores: {
+                1: report.score_1,
+                2: report.score_2,
+                3: report.score_3,
+                4: report.score_4,
+                5: report.score_5
+            }
+        }))
     }
 }
 
@@ -173,4 +220,41 @@ export const update_course_data = async (course_code: string) => {
     }
 
     return true
+}
+
+export const add_evaliuate_report_score = async (
+    course_code: string,
+    report_id: number,
+    report_date: string,
+    scores: Record<1 | 2 | 3 | 4 | 5, number>
+) => {
+    await run(
+        `INSERT INTO evaliuate_report (
+            course_code,
+            report_id,
+            report_date,
+            score_1,
+            score_2,
+            score_3,
+            score_4,
+            score_5
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT(course_code, report_id) DO UPDATE SET
+            report_date = excluded.report_date,
+            score_1 = excluded.score_1,
+            score_2 = excluded.score_2,
+            score_3 = excluded.score_3,
+            score_4 = excluded.score_4,
+            score_5 = excluded.score_5`,
+        [
+            course_code.toUpperCase(),
+            report_id,
+            report_date,
+            scores[1],
+            scores[2],
+            scores[3],
+            scores[4],
+            scores[5]
+        ]
+    )
 }
