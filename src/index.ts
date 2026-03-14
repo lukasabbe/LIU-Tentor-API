@@ -6,6 +6,7 @@ import type { DataCourseStatistic, EvaliuateData } from "./types.js";
 import { generateReturn } from "./util.js";
 import fs from "fs";
 import csvParser from "csv-parser";
+import cors from "cors";
 
 dotenv.config();
 
@@ -28,6 +29,7 @@ const limiter = rateLimit({
 
 app.use(json());
 app.use(limiter);
+app.use(cors())
 
 app.get("/", (req, res) => {
     res.json({status:"Ok"})
