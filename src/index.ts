@@ -7,6 +7,7 @@ import { generateReturn } from "./util.js";
 import fs from "fs";
 import csvParser from "csv-parser";
 import cors from "cors";
+import createMiddleware from "@openpanel/express";
 
 dotenv.config();
 
@@ -30,6 +31,16 @@ const limiter = rateLimit({
 app.use(json());
 app.use(limiter);
 app.use(cors())
+app.use(
+    createMiddleware({
+        clientId: process.env.OPEN_DASH_BOARD_CLIENT_ID || "",
+        clientSecret: process.env.OPEN_DASH_BOARD_SECRET_ID || "",
+        apiUrl: "https://opapi.lukasabbe.com",
+        trackRequest(url){
+            return true;
+        }
+    })
+)
 
 app.get("/", (req, res) => {
     res.json({status:"Ok"})
