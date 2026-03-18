@@ -10,8 +10,8 @@ import cors from "cors";
 import umami from "@umami/node";
 
 umami.init({
-    url: process.env.UMAMI_URL || "",
-    token: process.env.UMAMI_TOKEN || "",
+    hostUrl: process.env.UMAMI_URL || "",
+    websiteId: process.env.UMAMI_TOKEN || "",
 });
 
 dotenv.config();
