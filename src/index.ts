@@ -9,7 +9,9 @@ import csvParser from "csv-parser";
 import cors from "cors";
 import umami from "@umami/node";
 
-umami.init({
+const lib = (umami as any).default || umami;
+
+lib.init({
     hostUrl: process.env.UMAMI_URL || "",
     websiteId: process.env.UMAMI_TOKEN || "",
 });
@@ -42,7 +44,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/api/courses", async (req, res) => {
-    umami.track({
+    lib.track({
         url: req.originalUrl,
         referrer: req.get("referrer") || "",
         title: "Courses fetched",
@@ -57,7 +59,7 @@ app.get("/api/courses", async (req, res) => {
 });
 
 app.get("/api/courses/:courseCode", async (req, res) => {
-    umami.track({
+    lib.track({
         url: req.originalUrl,
         referrer: req.get("referrer") || "",
         title: "Course " + req.params.courseCode,
