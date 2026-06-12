@@ -94,4 +94,32 @@ Example: https://liutentor.lukasabbe.com/api/courses/TDDE35
 }
 ```
 
-### GET https://liutentor.lukasabbe.com/api/courses/bulk/:courseCodes
+### GET https://liutentor.lukasabbe.com/api/evaliuate/:courseCode
+
+Returns evaliuate data results for the specified course.
+
+Example: https://liutentor.lukasabbe.com/api/evaliuate/TDDE35
+
+### Response:
+
+```json
+[
+    "...",
+    {
+        "title":"Large-Scale Distributed Systems and Networks (TDDE35 2020-06-01 Lin 988846)",
+        "date":"2020-06-01",
+        "courseCode":"TDDE35",
+        "year":"2020",
+        "semester":"VT",
+        "questions":[
+            {"title":"Kursens ämnesinnehåll har gett mig möjlighet att uppnå kursens lärandemål.","avgValue":4},
+            {"title":"Kursens olika undervisnings- och arbetsformer har varit relevanta i relation till kursens lärandemål. Till undervisnings- och arbetsformer räknas till exempel föreläsningar, seminarier, laborationer, basgrupper, handledning, projekt och lektioner.","avgValue":3.57},
+            {"title":"Kursens examinerande moment har varit relevanta i relation till kursens lärandemål.","avgValue":3.83},
+            {"title":"Kursens pedagogiska genomförande har varit till stöd för mitt lärande.","avgValue":2.71},
+            {"title":"Anser du att kursens innehåll, genomförande och examination stämmer med kursplanen?","avgValue":3.8},
+            {"title":"Vilket helhetsbetyg ger du kursen?","avgValue":3}
+        ]
+    }
+    "...",
+]
+```
