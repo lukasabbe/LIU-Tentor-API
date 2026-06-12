@@ -8,6 +8,7 @@ import fs from "fs";
 import csvParser from "csv-parser";
 import cors from "cors";
 import umami from "@umami/node";
+import { formatedData } from "./EvaliuateData.js";
 
 const lib = (umami as any).default || umami;
 
@@ -93,6 +94,12 @@ app.get("/api/courses/:courseCode", async (req, res) => {
     }
 
     res.json(course);
+});
+
+app.get("/api/evaluate/:courseCode", (req, res) => {
+    const courseCode = req.params.courseCode;
+    const data = formatedData(courseCode.toUpperCase());
+    res.json(data);
 });
 
 app.listen(PORT, async () => {
