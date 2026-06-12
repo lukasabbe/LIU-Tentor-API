@@ -94,11 +94,11 @@ Example: https://liutentor.lukasabbe.com/api/courses/TDDE35
 }
 ```
 
-### GET https://liutentor.lukasabbe.com/api/evaliuate/:courseCode
+### GET https://liutentor.lukasabbe.com/api/evaluate/:courseCode
 
 Returns evaliuate data results for the specified course.
 
-Example: https://liutentor.lukasabbe.com/api/evaliuate/TDDE35
+Example: https://liutentor.lukasabbe.com/api/evaluate/TDDE35
 
 ### Response:
 
